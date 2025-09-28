@@ -169,9 +169,13 @@ if __name__ == "__main__":
     resp = session.get("https://portal.koreatech.ac.kr/ctt/bb/bulletin?b=21")
 
     new_posts = get_new_posts(conn, get_posts(resp.text))
+    
+    filtered_posts = {
+        post_id: title
+        for post_id, title in new_posts.items()
+        if any(keyword in title for keyword in KEYWORDS)
+    }
 
-    if new_posts:
-        for post_id, title in new_posts.items():
-            if any(keyword in title for keyword in KEYWORDS):
-                body = "\n".join([f"{post_id} : {title}" for post_id, title in new_posts.items()])
-                send_email("새 게시글 알림", body, "augustapple77@gmail.com")
+    if filtered_posts:
+        body = "\n".join([f"{post_id} : {title}" for post_id, title in filtered_posts.items()])
+        send_email("새 게시글 알림", body, "augustapple77@gmail.com")
