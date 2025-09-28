@@ -158,6 +158,9 @@ def send_email(subject: str, body: str, receiver: str):
     with smtplib.SMTP('localhost', 25) as server:
         server.sendmail(sender, receiver, msg.as_string())
 
+def load_receivers(filename="receivers.txt"):
+    with open(filename, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip()]
 
 if __name__ == "__main__":
     load_dotenv()
@@ -178,4 +181,5 @@ if __name__ == "__main__":
 
     if filtered_posts:
         body = "\n".join([f"{post_id} : {title}" for post_id, title in filtered_posts.items()])
-        send_email("새 게시글 알림", body, "augustapple77@gmail.com")
+        for email in load_receivers():
+            send_email("새 게시글 알림", body, email)
