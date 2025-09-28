@@ -181,5 +181,5 @@ if __name__ == "__main__":
 
     if filtered_posts:
         body = "\n".join([f"{post_id} : {title}" for post_id, title in filtered_posts.items()])
-        for email in load_receivers():
-            send_email("새 게시글 알림", body, email)
+        for receiver in load_receivers():
+            send_email("새 게시글 알림", body, receiver)
